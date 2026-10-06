@@ -3,256 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PK Trading Bot</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://s3.tradingview.com/tv.js"></script>
+    <title>PK TRADER REAL PRO</title>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #05080c; color: #e0e0e0; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-        
-        /* Header Styling */
-        .header-container { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
-        .title-box { display: flex; flex-direction: column; }
-        .title-main { font-size: 18px; font-weight: 800; color: #00f2fe; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
-        
-        /* Owner Animated RGB Neon Lighting & Anime Boy */
-        .owner-wrapper {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0e14;
+            color: #ffffff;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .title-container {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-top: 2px;
         }
 
-        .owner-tag {
-            font-size: 13px;
-            font-weight: bold;
-            animation: neonGlow 3s infinite alternate;
+        .title {
+            color: #00f2ff;
+            font-size: 18px;
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
         }
 
-        @keyframes neonGlow {
-            0% { color: #00f2fe; text-shadow: 0 0 8px rgba(0, 242, 254, 0.8); }
-            33% { color: #ff007f; text-shadow: 0 0 8px rgba(255, 0, 127, 0.8); }
-            66% { color: #00ff87; text-shadow: 0 0 8px rgba(0, 255, 135, 0.8); }
-            100% { color: #f0b90b; text-shadow: 0 0 8px rgba(240, 185, 11, 0.8); }
-        }
-
-        /* Anime Smoking Character Container */
-        .anime-smoke-box {
-            position: relative;
-            display: inline-flex;
+        .owner-badge {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
+            gap: 6px;
+            font-size: 13px;
+            color: #ffcc00;
+            font-weight: 600;
+            margin-top: 4px;
         }
 
-        /* Anime Boy Image Floating Movement */
-        .anime-char {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 0 5px rgba(0, 242, 254, 0.6));
-            animation: floatMove 2.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatMove {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-3px) rotate(3deg); }
-        }
-
-        /* Animated Rising Smoke Ring Effect */
-        .smoke-particle {
-            position: absolute;
-            top: 2px;
-            right: 0px;
-            width: 6px;
-            height: 6px;
-            background: rgba(220, 220, 220, 0.7);
+        .owner-avatar {
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            filter: blur(2px);
-            animation: smokeRise 1.8s infinite linear;
+            border: 2px solid #ffcc00;
+            box-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
         }
 
-        .smoke-particle:nth-child(2) {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes smokeRise {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
-            50% { transform: translate(6px, -8px) scale(2); opacity: 0.5; }
-            100% { transform: translate(12px, -18px) scale(3.5); opacity: 0; }
-        }
-
-        /* Profile Logo Badge */
-        .profile-badge {
+        .logo-circle {
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border: 2px solid #00f2fe;
+            border: 2px solid #00f2ff;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             font-weight: bold;
-            color: #00f2fe;
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
-            font-size: 14px;
-            background: #0d1117;
+            color: #00f2ff;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.4);
         }
 
-        /* Selectors */
-        .select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
-        select { background: #12161f; color: #00f2fe; border: 1px solid #1e2638; border-radius: 8px; padding: 8px; font-weight: bold; font-size: 13px; outline: none; }
+        .controls {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
 
-        .card { background: #0c1017; border-radius: 12px; padding: 10px; border: 1px solid #1a2233; }
-        #chart-container { height: 210px; border-radius: 8px; overflow: hidden; }
-        
-        /* 6 Indicator Grid */
-        .indicator-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
-        .ind-box { background: #06090e; padding: 6px; border-radius: 6px; text-align: center; border: 1px solid #161d2b; }
-        .ind-title { font-size: 9px; color: #6c7a8e; font-weight: bold; }
-        .ind-val { font-size: 11px; font-weight: bold; margin-top: 2px; }
+        select {
+            flex: 1;
+            background: #151a23;
+            color: #00f2ff;
+            border: 1px solid #2a3241;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
 
-        .signal-box { background: #0c1017; border-radius: 10px; padding: 12px; border: 1px solid #1a2233; margin-top: 4px; }
-        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .row:last-child { margin-bottom: 0; }
-        .label { color: #7f8c9d; font-size: 13px; }
-        .value { font-size: 14px; font-weight: bold; }
-        
-        .btn-action { width: 100%; padding: 13px; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border: none; border-radius: 8px; color: #000; font-weight: 800; font-size: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3); margin-top: 4px; }
-        .btn-action:active { transform: scale(0.98); }
-        .footer { text-align: center; font-size: 11px; color: #485465; margin-top: 2px; }
+        select option {
+            background: #151a23;
+            color: #ffffff;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 480px;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2a3241;
+            margin-bottom: 12px;
+        }
+
+        .indicators {
+            width: 100%;
+            max-width: 480px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .ind-box {
+            background: #151a23;
+            border: 1px solid #2a3241;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .ind-title {
+            font-size: 10px;
+            color: #848e9c;
+            margin-bottom: 4px;
+        }
+
+        .ind-value {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .signal-card {
+            width: 100%;
+            max-width: 480px;
+            background: #151a23;
+            border: 1px solid #2a3241;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .signal-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .signal-type {
+            font-weight: bold;
+            color: #ff3b30;
+        }
+
+        .btn-signal {
+            width: 100%;
+            max-width: 480px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border: none;
+            color: #fff;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 198, 255, 0.4);
+            margin-bottom: 12px;
+        }
+
+        .footer {
+            font-size: 11px;
+            color: #5e6673;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
-    <div class="header-container">
-        <div class="title-box">
-            <div class="title-main">⚡ PK TRADER REAL PRO</div>
-            <!-- Dynamic Neon Lighting Owner Name & Animated Anime Smoking Character -->
-            <div class="owner-wrapper">
-                <span class="owner-tag">Owner : NomaN</span>
-                <div class="anime-smoke-box">
-                    <div class="smoke-particle"></div>
-                    <div class="smoke-particle"></div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Anime Smoker" class="anime-char">
-                </div>
+    <div class="header">
+        <div>
+            <div class="title-container">
+                <span style="color:#ffcc00;">⚡</span>
+                <span class="title">PK TRADER REAL PRO</span>
+            </div>
+            <div class="owner-badge">
+                Owner : NomaN
+                <img class="owner-avatar" src="https://i.ibb.co/L5392P7/anime-boy.jpg" alt="Owner">
             </div>
         </div>
-        <div class="profile-badge">PK</div>
+        <div class="logo-circle">PK</div>
     </div>
 
-    <!-- Pair & Timeframe Selectors -->
-    <div class="select-grid">
+    <div class="controls">
         <select id="pair-select" onchange="updateChart()">
-            <option value="BINANCE:BTCUSDT">EUR/USD (BTC)</option>
-            <option value="BINANCE:ETHUSDT">ETH/USDT</option>
-            <option value="BINANCE:BNBUSDT">BNB/USDT</option>
+            <!-- Forex Market Pairs -->
+            <optgroup label="Forex Pairs">
+                <option value="FX:EURUSD" selected>EUR/USD</option>
+                <option value="FX:GBPUSD">GBP/USD</option>
+                <option value="FX:USDJPY">USD/JPY</option>
+                <option value="FX:AUDUSD">AUD/USD</option>
+                <option value="FX:USDCAD">USD/CAD</option>
+                <option value="FX:USDCHF">USD/CHF</option>
+                <option value="FX:EURGBP">EUR/GBP</option>
+                <option value="FX:EURJPY">EUR/JPY</option>
+
+            <!-- Crypto Market Pairs -->
+            <optgroup label="Crypto Pairs">
+                <option value="BINANCE:BTCUSDT">BTC/USDT</option>
+                <option value="BINANCE:ETHUSDT">ETH/USDT</option>
+                <option value="BINANCE:BNBUSDT">BNB/USDT</option>
+                <option value="BINANCE:SOLUSDT">SOL/USDT</option>
+                <option value="BINANCE:XRPUSDT">XRP/USDT</option>
+                <option value="BINANCE:DOGEUSDT">DOGE/USDT</option>
+                <option value="BINANCE:ADAUSDT">ADA/USDT</option>
+                <option value="BINANCE:AVAXUSDT">AVAX/USDT</option>
+                <option value="BINANCE:MATICUSDT">MATIC/USDT</option>
+                <option value="BINANCE:DOTUSDT">DOT/USDT</option>
+                <option value="BINANCE:LTCUSDT">LTC/USDT</option>
+            </optgroup>
         </select>
+
         <select id="time-select" onchange="updateChart()">
             <option value="1">1 Min (1m)</option>
             <option value="5">5 Min (5m)</option>
+            <option value="15">15 Min (15m)</option>
         </select>
     </div>
 
-    <!-- TradingView Chart -->
-    <div class="card">
-        <div id="chart-container"></div>
-        
-        <!-- 6 Indicators Live Grid -->
-        <div class="indicator-grid">
-            <div class="ind-box">
-                <div class="ind-title">RSI (14)</div>
-                <div class="ind-val" id="ind-rsi" style="color: #f6465d;">64.0 🔴</div>
-            </div>
-            <div class="ind-box">
-                <div class="ind-title">EMA (9/21)</div>
-                <div class="ind-val" id="ind-ema" style="color: #f6465d;">BEARISH 🔴</div>
-            </div>
-            <div class="ind-box">
-                <div class="ind-title">SUMMARY</div>
-                <div class="ind-val" id="ind-sum" style="color: #f6465d;">STRONG SELL 🔴</div>
-            </div>
+    <div class="chart-container" id="tv_chart"></div>
+
+    <div class="indicators">
+        <div class="ind-box">
+            <div class="ind-title">RSI (14)</div>
+            <div class="ind-value" id="ind-rsi" style="color:#ff3b30;">64.0 🔴</div>
+        </div>
+        <div class="ind-box">
+            <div class="ind-title">EMA (9/21)</div>
+            <div class="ind-value" id="ind-ema" style="color:#ff3b30;">BEARISH 🔴</div>
+        </div>
+        <div class="ind-box">
+            <div class="ind-title">SUMMARY</div>
+            <div class="ind-value" id="ind-sum" style="color:#ff3b30;">STRONG SELL 🔴</div>
         </div>
     </div>
 
-    <!-- Live Signal Box -->
-    <div class="signal-box">
-        <div class="row">
-            <span class="label">Signal Type:</span>
-            <span class="value" id="signal-type" style="color: #f6465d;">PUT (SELL) 🔴</span>
+    <div class="signal-card">
+        <div class="signal-row">
+            <span>Signal Type:</span>
+            <span class="signal-type" id="signal-type">PUT (SELL) 🔴</span>
         </div>
-        <div class="row">
-            <span class="label">Entry Time:</span>
-            <span class="value" id="entry-time" style="color: #f0b90b;">15:35:00</span>
+        <div class="signal-row">
+            <span>Entry Time:</span>
+            <span style="color:#ffcc00; font-weight:bold;" id="entry-time">15:35:00</span>
         </div>
-        <div class="row">
-            <span class="label">Signal Confidence:</span>
-            <span class="value" id="signal-confidence" style="color: #00f2fe;">95%</span>
+        <div class="signal-row">
+            <span>Signal Confidence:</span>
+            <span style="color:#00f2ff; font-weight:bold;" id="signal-confidence">95%</span>
         </div>
     </div>
 
-    <button class="btn-action" onclick="fetchNewSignal()">GET FUTURE SIGNAL</button>
+    <button class="btn-signal" onclick="fetchNewSignal()">GET FUTURE SIGNAL</button>
 
     <div class="footer">@pk_trading_analysis_bot</div>
 
-    <script>
-        let tvWidget;
+    <script type="text/javascript">
+        let widget;
 
-        function initChart(symbol = "BINANCE:BTCUSDT", interval = "1") {
-            document.getElementById('chart-container').innerHTML = '';
-            tvWidget = new TradingView.widget({
-                "autosize": true,
+        function loadChart(symbol, interval) {
+            document.getElementById('tv_chart').innerHTML = '';
+            widget = new TradingView.widget({
+                "width": "100%",
+                "height": "100%",
                 "symbol": symbol,
                 "interval": interval,
-                "timezone": "Asia/Dhaka",
+                "timezone": "Etc/UTC",
                 "theme": "dark",
                 "style": "1",
                 "locale": "en",
                 "toolbar_bg": "#f1f3f6",
                 "enable_publishing": false,
-                "hide_top_toolbar": true,
+                "hide_legend": true,
                 "save_image": false,
-                "container_id": "chart-container"
+                "container_id": "tv_chart"
             });
         }
 
         function updateChart() {
             const pair = document.getElementById('pair-select').value;
             const time = document.getElementById('time-select').value;
-            initChart(pair, time);
+            loadChart(pair, time);
         }
 
         function fetchNewSignal() {
-            const now = new Date();
-            const timeString = now.toTimeString().split(' ')[0];
-            document.getElementById('entry-time').innerText = timeString;
+            const types = ["CALL (BUY) 🟢", "PUT (SELL) 🔴"];
+            const confs = ["90%", "92%", "95%", "98%"];
+            
+            const isBuy = Math.random() > 0.5;
+            const chosenType = isBuy ? "CALL (BUY) 🟢" : "PUT (SELL) 🔴";
+            const color = isBuy ? "#34c759" : "#ff3b30";
 
-            const isCall = Math.random() > 0.5;
-            if (isCall) {
-                document.getElementById('signal-type').innerHTML = "CALL (BUY) 🟢";
-                document.getElementById('signal-type').style.color = "#00c087";
-                document.getElementById('ind-rsi').innerHTML = "41.2 🟢";
-                document.getElementById('ind-rsi').style.color = "#00c087";
-                document.getElementById('ind-ema').innerHTML = "BULLISH 🟢";
-                document.getElementById('ind-ema').style.color = "#00c087";
-                document.getElementById('ind-sum').innerHTML = "STRONG BUY 🟢";
-                document.getElementById('ind-sum').style.color = "#00c087";
-                document.getElementById('signal-confidence').innerText = "93%";
-            } else {
-                document.getElementById('signal-type').innerHTML = "PUT (SELL) 🔴";
-                document.getElementById('signal-type').style.color = "#f6465d";
-                document.getElementById('ind-rsi').innerHTML = "68.5 🔴";
-                document.getElementById('ind-rsi').style.color = "#f6465d";
-                document.getElementById('ind-ema').innerHTML = "BEARISH 🔴";
-                document.getElementById('ind-ema').style.color = "#f6465d";
-                document.getElementById('ind-sum').innerHTML = "STRONG SELL 🔴";
-                document.getElementById('ind-sum').style.color = "#f6465d";
-                document.getElementById('signal-confidence').innerText = "96%";
-            }
+            document.getElementById('signal-type').innerText = chosenType;
+            document.getElementById('signal-type').style.color = color;
+            document.getElementById('ind-rsi').style.color = color;
+            document.getElementById('ind-ema').style.color = color;
+            document.getElementById('ind-sum').style.color = color;
+
+            document.getElementById('ind-rsi').innerText = isBuy ? "36.0 🟢" : "64.0 🔴";
+            document.getElementById('ind-ema').innerText = isBuy ? "BULLISH 🟢" : "BEARISH 🔴";
+            document.getElementById('ind-sum').innerText = isBuy ? "STRONG BUY 🟢" : "STRONG SELL 🔴";
+
+            document.getElementById('signal-confidence').innerText = confs[Math.floor(Math.random() * confs.length)];
+            
+            const now = new Date();
+            now.setMinutes(now.getMinutes() + 1);
+            document.getElementById('entry-time').innerText = now.toTimeString().split(' ')[0];
         }
 
-        initChart();
+        // Initial Chart Load
+        loadChart('FX:EURUSD', '1');
     </script>
 </body>
 </html>
