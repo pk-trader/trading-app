@@ -14,7 +14,7 @@
         .logo-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #00f2ff; display: flex; justify-content: center; align-items: center; font-weight: bold; color: #00f2ff; }
         .controls { width: 100%; max-width: 480px; display: flex; gap: 10px; margin-bottom: 12px; }
         select { flex: 1; background: #151a23; color: #00f2ff; border: 1px solid #2a3241; padding: 10px; border-radius: 8px; font-weight: bold; outline: none; }
-        .chart-container { width: 100%; max-width: 480px; height: 300px; border-radius: 10px; overflow: hidden; border: 1px solid #2a3241; margin-bottom: 12px; }
+        .chart-container { width: 100%; max-width: 480px; height: 280px; border-radius: 10px; overflow: hidden; border: 1px solid #2a3241; margin-bottom: 12px; }
         .indicators { width: 100%; max-width: 480px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .ind-box { background: #151a23; border: 1px solid #2a3241; padding: 8px; border-radius: 8px; text-align: center; }
         .ind-title { font-size: 10px; color: #848e9c; margin-bottom: 4px; }
@@ -36,23 +36,17 @@
 
     <div class="controls">
         <select id="pair-select" onchange="updateChart()">
-    <!-- Top Volatile Crypto Real Pairs -->
-    <option value="BTCUSDT" selected>BTC/USDT (Crypto Real)</option>
-    <option value="ETHUSDT">ETH/USDT (Crypto Real)</option>
-    <option value="SOLUSDT">SOL/USDT (Crypto Real)</option>
-    <option value="BNBUSDT">BNB/USDT (Crypto Real)</option>
-    <option value="XRPUSDT">XRP/USDT (Crypto Real)</option>
-    <option value="DOGEUSDT">DOGE/USDT (Crypto Real)</option>
-    <option value="ADAUSDT">ADA/USDT (Crypto Real)</option>
-    <option value="AVAXUSDT">AVAX/USDT (Crypto Real)</option>
-    <option value="LINKUSDT">LINK/USDT (Crypto Real)</option>
-    <option value="NEARUSDT">NEAR/USDT (Crypto Real)</option>
-
-    <!-- Top Forex Benchmarks (Binance Live Feeds) -->
-    <option value="EURUSDT">EUR/USDT (Forex Benchmark)</option>
-    <option value="GBPUSDT">GBP/USDT (Forex Benchmark)</option>
-    <option value="AUDUSDT">AUD/USDT (Forex Benchmark)</option>
-</select>
+            <option value="BTCUSDT" selected>BTC/USDT (Crypto Real)</option>
+            <option value="ETHUSDT">ETH/USDT (Crypto Real)</option>
+            <option value="SOLUSDT">SOL/USDT (Crypto Real)</option>
+            <option value="BNBUSDT">BNB/USDT (Crypto Real)</option>
+            <option value="XRPUSDT">XRP/USDT (Crypto Real)</option>
+            <option value="DOGEUSDT">DOGE/USDT (Crypto Real)</option>
+            <option value="LTCUSDT">LTC/USDT (Crypto Real)</option>
+            <option value="ADAUSDT">ADA/USDT (Crypto Real)</option>
+            <option value="EURUSDT">EUR/USDT (Forex Benchmark)</option>
+            <option value="GBPUSDT">GBP/USDT (Forex Benchmark)</option>
+        </select>
         <select id="time-select" onchange="updateChart()">
             <option value="1m">1 Min (1m)</option>
             <option value="5m">5 Min (5m)</option>
@@ -73,7 +67,7 @@
     <div class="signal-card">
         <div class="signal-row"><span>Signal Type:</span><span id="signal-type" style="font-weight:bold;">WAIT 🟡</span></div>
         <div class="signal-row"><span>Entry Time:</span><span id="entry-time" style="color:#ffcc00; font-weight:bold;">--:--:--</span></div>
-        <div class="signal-row"><span>Confirmation:</span><span id="signal-confidence" style="color:#00f2ff; font-weight:bold;">STRICT FILTER</span></div>
+        <div class="signal-row"><span>Confirmation:</span><span id="signal-confidence" style="color:#00f2ff; font-weight:bold;">LIVE BINANCE ENGINE</span></div>
     </div>
 
     <button class="btn-signal" id="btn-calc" onclick="fetchLiveSignal()">GET REAL LIVE SIGNAL</button>
@@ -94,11 +88,20 @@
             loadChart(pair, time);
         }
 
+        function calculateEMA(data, period) {
+            const k = 2 / (period + 1);
+            let ema = data[0];
+            for (let i = 1; i < data.length; i++) {
+                ema = (data[i] * k) + (ema * (1 - k));
+            }
+            return ema;
+        }
+
         async function fetchLiveSignal() {
             const pair = document.getElementById('pair-select').value;
             const interval = document.getElementById('time-select').value;
             const btn = document.getElementById('btn-calc');
-            btn.innerText = "FETCHING BINANCE LIVE DATA...";
+            btn.innerText = "CALCULATING LIVE MARKET...";
             btn.disabled = true;
 
             try {
@@ -108,30 +111,78 @@
                 const highs = data.map(d => parseFloat(d[2]));
                 const lows = data.map(d => parseFloat(d[3]));
                 const opens = data.map(d => parseFloat(d[1]));
+                const volumes = data.map(d => parseFloat(d[5]));
+
+                const len = closes.length;
+                const cClose = closes[len - 1];
+                const cOpen = opens[len - 1];
 
                 let buyScore = 0, sellScore = 0;
 
-                // RSI Calculation
+                // 1. RSI (14)
                 let gains = 0, losses = 0;
-                for (let i = closes.length - 14; i < closes.length; i++) {
+                for (let i = len - 14; i < len; i++) {
                     let diff = closes[i] - closes[i - 1];
                     if (diff >= 0) gains += diff; else losses -= diff;
                 }
                 let rsi = 100 - (100 / (1 + (gains / (losses || 1))));
-                if (rsi < 35) buyScore++; else if (rsi > 65) sellScore++;
-
-                // EMA Check
-                let lastClose = closes[closes.length - 1];
-                let prevClose = closes[closes.length - 2];
-                if (lastClose > opens[opens.length - 1]) buyScore++; else sellScore++;
-
-                let totalScore = Math.max(buyScore, sellScore);
-                let isBuy = buyScore >= sellScore;
-
                 document.getElementById('ind-rsi').innerText = rsi.toFixed(1);
-                document.getElementById('ind-score').innerText = `${totalScore}/10`;
+                if (rsi < 40) buyScore += 2; else if (rsi > 60) sellScore += 2;
 
-                if (totalScore >= 8) {
+                // 2. EMA 9 vs 21
+                let ema9 = calculateEMA(closes.slice(-20), 9);
+                let ema21 = calculateEMA(closes.slice(-40), 21);
+                if (ema9 > ema21) {
+                    buyScore += 2;
+                    document.getElementById('ind-ema').innerText = "BULLISH 🟢";
+                    document.getElementById('ind-ema').style.color = "#34c759";
+                } else {
+                    sellScore += 2;
+                    document.getElementById('ind-ema').innerText = "BEARISH 🔴";
+                    document.getElementById('ind-ema').style.color = "#ff3b30";
+                }
+
+                // 3. MACD
+                let ema12 = calculateEMA(closes.slice(-30), 12);
+                let ema26 = calculateEMA(closes.slice(-60), 26);
+                let macd = ema12 - ema26;
+                if (macd > 0) {
+                    buyScore += 2;
+                    document.getElementById('ind-macd').innerText = "BUY CROSS 🟢";
+                    document.getElementById('ind-macd').style.color = "#34c759";
+                } else {
+                    sellScore += 2;
+                    document.getElementById('ind-macd').innerText = "SELL CROSS 🔴";
+                    document.getElementById('ind-macd').style.color = "#ff3b30";
+                }
+
+                // 4. Stochastic
+                let minLow = Math.min(...lows.slice(-14));
+                let maxHigh = Math.max(...highs.slice(-14));
+                let stoch = ((cClose - minLow) / ((maxHigh - minLow) || 1)) * 100;
+                document.getElementById('ind-stoch').innerText = stoch.toFixed(0) + "%";
+                if (stoch < 30) buyScore += 1; else if (stoch > 70) sellScore += 1;
+
+                // 5. Candle & Volume Momentum
+                if (cClose > cOpen) {
+                    buyScore += 2;
+                    document.getElementById('ind-boll').innerText = "UP TREND 🟢";
+                    document.getElementById('ind-boll').style.color = "#34c759";
+                } else {
+                    sellScore += 2;
+                    document.getElementById('ind-boll').innerText = "DOWN TREND 🔴";
+                    document.getElementById('ind-boll').style.color = "#ff3b30";
+                }
+
+                if (volumes[len - 1] > volumes[len - 2]) {
+                    if (cClose > cOpen) buyScore += 1; else sellScore += 1;
+                }
+
+                let isBuy = buyScore >= sellScore;
+                let topScore = Math.max(buyScore, sellScore);
+                document.getElementById('ind-score').innerText = `${topScore}/10`;
+
+                if (topScore >= 6) {
                     let color = isBuy ? "#34c759" : "#ff3b30";
                     document.getElementById('signal-type').innerText = isBuy ? "STRONG CALL (BUY) 🟢" : "STRONG PUT (SELL) 🔴";
                     document.getElementById('signal-type').style.color = color;
@@ -145,7 +196,7 @@
                 document.getElementById('entry-time').innerText = now.toTimeString().split(' ')[0];
 
             } catch (err) {
-                document.getElementById('signal-type').innerText = "API ERROR - TRY AGAIN 🔴";
+                document.getElementById('signal-type').innerText = "API CONNECTION ERROR 🔴";
             }
             btn.innerText = "GET REAL LIVE SIGNAL";
             btn.disabled = false;
