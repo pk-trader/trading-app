@@ -36,12 +36,23 @@
 
     <div class="controls">
         <select id="pair-select" onchange="updateChart()">
-            <option value="BTCUSDT" selected>BTC/USDT</option>
-            <option value="ETHUSDT">ETH/USDT</option>
-            <option value="BNBUSDT">BNB/USDT</option>
-            <option value="SOLUSDT">SOL/USDT</option>
-            <option value="XRPUSDT">XRP/USDT</option>
-        </select>
+    <!-- Top Volatile Crypto Real Pairs -->
+    <option value="BTCUSDT" selected>BTC/USDT (Crypto Real)</option>
+    <option value="ETHUSDT">ETH/USDT (Crypto Real)</option>
+    <option value="SOLUSDT">SOL/USDT (Crypto Real)</option>
+    <option value="BNBUSDT">BNB/USDT (Crypto Real)</option>
+    <option value="XRPUSDT">XRP/USDT (Crypto Real)</option>
+    <option value="DOGEUSDT">DOGE/USDT (Crypto Real)</option>
+    <option value="ADAUSDT">ADA/USDT (Crypto Real)</option>
+    <option value="AVAXUSDT">AVAX/USDT (Crypto Real)</option>
+    <option value="LINKUSDT">LINK/USDT (Crypto Real)</option>
+    <option value="NEARUSDT">NEAR/USDT (Crypto Real)</option>
+
+    <!-- Top Forex Benchmarks (Binance Live Feeds) -->
+    <option value="EURUSDT">EUR/USDT (Forex Benchmark)</option>
+    <option value="GBPUSDT">GBP/USDT (Forex Benchmark)</option>
+    <option value="AUDUSDT">AUD/USDT (Forex Benchmark)</option>
+</select>
         <select id="time-select" onchange="updateChart()">
             <option value="1m">1 Min (1m)</option>
             <option value="5m">5 Min (5m)</option>
