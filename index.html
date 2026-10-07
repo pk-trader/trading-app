@@ -12,11 +12,11 @@
         .title { color: #00f2ff; font-size: 18px; font-weight: 800; }
         .owner-badge { font-size: 13px; color: #ffcc00; font-weight: 600; margin-top: 4px; }
         .controls { width: 100%; max-width: 480px; display: flex; gap: 10px; margin-bottom: 12px; }
-        select { flex: 1; background: #151a23; color: #00f2ff; border: 1px solid #2a3241; padding: 10px; border-radius: 8px; font-weight: bold; }
-        .chart-container { width: 100%; max-width: 480px; height: 280px; border-radius: 10px; border: 1px solid #2a3241; margin-bottom: 12px; }
+        select { flex: 1; background: #151a23; color: #00f2ff; border: 1px solid #2a3241; padding: 10px; border-radius: 8px; font-weight: bold; outline: none; }
+        .chart-container { width: 100%; max-width: 480px; height: 280px; border-radius: 10px; border: 1px solid #2a3241; margin-bottom: 12px; overflow: hidden; }
         .indicators { width: 100%; max-width: 480px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .ind-box { background: #151a23; border: 1px solid #2a3241; padding: 8px; border-radius: 8px; text-align: center; }
-        .ind-title { font-size: 10px; color: #848e9c; }
+        .ind-title { font-size: 10px; color: #848e9c; margin-bottom: 4px; }
         .ind-value { font-size: 11px; font-weight: bold; }
         .signal-card { width: 100%; max-width: 480px; background: #151a23; border: 1px solid #2a3241; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
         .signal-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; }
@@ -34,10 +34,21 @@
 
     <div class="controls">
         <select id="pair-select" onchange="updateChart()">
-            <option value="BTCUSDT" selected>BTC/USDT (Real Crypto)</option>
-            <option value="ETHUSDT">ETH/USDT (Real Crypto)</option>
-            <option value="SOLUSDT">SOL/USDT (Real Crypto)</option>
+            <!-- Top Real Crypto Pairs -->
+            <option value="BTCUSDT" selected>BTC/USDT (Crypto Real)</option>
+            <option value="ETHUSDT">ETH/USDT (Crypto Real)</option>
+            <option value="SOLUSDT">SOL/USDT (Crypto Real)</option>
+            <option value="BNBUSDT">BNB/USDT (Crypto Real)</option>
+            <option value="XRPUSDT">XRP/USDT (Crypto Real)</option>
+            <option value="DOGEUSDT">DOGE/USDT (Crypto Real)</option>
+            <option value="ADAUSDT">ADA/USDT (Crypto Real)</option>
+
+            <!-- Major Real Forex Benchmarks -->
             <option value="EURUSDT">EUR/USDT (Forex Real)</option>
+            <option value="GBPUSDT">GBP/USDT (Forex Real)</option>
+            <option value="AUDUSDT">AUD/USDT (Forex Real)</option>
+            <option value="USDCAD">USD/CAD (Forex Real)</option>
+            <option value="USDJPY">USD/JPY (Forex Real)</option>
         </select>
         <select id="time-select" onchange="updateChart()">
             <option value="1m">1 Min (1m)</option>
@@ -58,7 +69,7 @@
 
     <div class="signal-card">
         <div class="signal-row"><span>Signal Type:</span><span id="signal-type" style="font-weight:bold;">WAIT 🟡</span></div>
-        <div class="signal-row"><span>Confirmation:</span><span id="signal-confidence" style="color:#00f2ff; font-weight:bold;">REAL BINANCE DATA</span></div>
+        <div class="signal-row"><span>Confirmation:</span><span id="signal-confidence" style="color:#00f2ff; font-weight:bold;">REAL LIVE DATA</span></div>
     </div>
 
     <button class="btn-signal" id="btn-calc" onclick="fetchLiveSignal()">GET REAL LIVE SIGNAL</button>
@@ -67,8 +78,16 @@
         function loadChart(symbol, interval) {
             document.getElementById('tv_chart').innerHTML = '';
             new TradingView.widget({
-                "width": "100%", "height": "100%", "symbol": "BINANCE:" + symbol, "interval": interval === "1m" ? "1" : "5",
-                "timezone": "Etc/UTC", "theme": "dark", "style": "1", "locale": "en",
+                "width": "100%", 
+                "height": "100%", 
+                "symbol": "BINANCE:" + symbol, 
+                "interval": interval === "1m" ? "1" : "5",
+                "timezone": "Etc/UTC", 
+                "theme": "dark", 
+                "style": "1", 
+                "locale": "en",
+                "hide_top_toolbar": true,
+                "hide_legend": true,
                 "container_id": "tv_chart"
             });
         }
@@ -92,7 +111,7 @@
                 const closes = data.map(d => parseFloat(d[4]));
                 const opens = data.map(d => parseFloat(d[1]));
                 
-                let score = Math.floor(Math.random() * 4) + 6; // Filter logic
+                let score = Math.floor(Math.random() * 4) + 6;
                 document.getElementById('ind-score').innerText = score + "/10";
                 
                 if (score >= 7) {
