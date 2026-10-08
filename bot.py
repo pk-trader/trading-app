@@ -2,12 +2,12 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-BOT_TOKEN = "8982381249:AAFvu8_EDCyrflcJIbymkKPCs1BeAopvsAo"  # Replace with your actual bot token
-WEB_APP_URL = "https://pk-trader.github.io/trading-app/"  # Replace with your GitHub Pages URL
+BOT_TOKEN = "7730999818:AAH3mD_Nn_zJ6uD9T_5w8A_XYZ"  # তোর আসল বট টোকেন বসাবি
+WEB_APP_URL = "https://pk-trader.github.io/trading-app/"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-async function_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("🚀 OPEN PK TRADER REAL PRO", web_app=WebAppInfo(url=WEB_APP_URL))]
     ])
