@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppI
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 # তোর আসল টেলিগ্রাম বট টোকেন এবং গিটহাব পেজ লিঙ্ক
-BOT_TOKEN = "8982381249:AAFvu8_EDCyrflcJIbymkKPCs1BeAopvsAo"  # BotFather থেকে পাওয়া আসল টোকেন
+BOT_TOKEN = "8982381249:AAFztjTeG0eY3A_ikDQeW5iURUbCv6tgf8E"  # BotFather থেকে পাওয়া আসল টোকেন
 WEB_APP_URL = "https://pk-trader.github.io/trading-app/"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
