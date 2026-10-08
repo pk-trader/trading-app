@@ -2,7 +2,7 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-BOT_TOKEN = "7730999818:AAH3mD_Nn_zJ6uD9T_5w8A_XYZ"  # তোর আসল বট টোকেন বসাবি
+BOT_TOKEN = "8982381249:AAFvu8_EDCyrflcJIbymkKPCs1BeAopvsAo"  # তোর আসল বট টোকেন বসাবি
 WEB_APP_URL = "https://pk-trader.github.io/trading-app/"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
